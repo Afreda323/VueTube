@@ -13,6 +13,7 @@
       <v-layout row align-center style="max-width: 650px">
         <v-text-field 
           clearable
+          :value="term"
           label='Enter Search' 
           @input="onInput" 
           append-icon='search'
@@ -29,7 +30,8 @@
 export default {
   name: "SearchBar",
   props: {
-    errorMessage: String
+    errorMessage: String,
+    term: String,
   },
   methods: {
     onInput(val) {

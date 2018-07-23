@@ -7,6 +7,7 @@
       :video="video"
       @selectVideo="selectVideo"
     />
+    <v-btn v-if="videos.length && hasNextPage" @click="loadMore" color="red">LOAD MORE</v-btn>
   </v-list>
 </template>
 
@@ -18,6 +19,10 @@ export default {
   components: {
     VideoListItem,
   },
+  props: {
+    videos: Array,
+    hasNextPage: Boolean,
+  },
   computed: {
     breakpoint() {
       const { mdAndUp, xs } = this.$vuetify.breakpoint
@@ -25,12 +30,13 @@ export default {
       else return false
     }
   },
-  props: {
-    videos: Array,
-  },
   methods: {
     selectVideo(video) {
       this.$emit("selectVideo", video)
+    },
+    loadMore() {
+      this.$emit("loadMore")
+      console.log(this.videos, this.hasNextPage)
     }
   }
 }

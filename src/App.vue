@@ -1,6 +1,7 @@
 <template>
   <v-app dark>
     <SearchBar 
+      :term="term"
       @termChange="onTermChange" 
       :errorMessage="searchError" 
     />
@@ -13,6 +14,8 @@
           <VideoList 
             v-if="videos.length"
             :videos="videos"
+            :hasNextPage="!!nextPage"
+            @loadMore="loadMore"
             @selectVideo="selectVideo"
           />
         </v-flex>
@@ -39,9 +42,12 @@ export default {
   },
   data() {
     return {
+      term: '',
+      searchTerm: '',
       searchError: '',
       videos: [],
       selectedVideo: null,
+      nextPage: null,
     }
   },
   computed: {
@@ -51,27 +57,37 @@ export default {
     }
   },
   methods: {
-    async onTermChange(term) {
+    onTermChange(term) {
       this.searchError = ''
-      if (term !== '') {
-        try {
-          const { data } = await axios.get(API_URL, {
-            params: {
-              key: API_KEY,
-              type: 'video',
-              part: 'snippet',
-              q: term,
-            }
-          })
-          console.log(data.items)
+      this.term = term
+      this.nextPage = null
+      
+      this.fetchData()
+    },
+    loadMore() {
+      this.fetchData(this.nextPage)
+    },
+    async fetchData(nextPage) {
+      const params = {
+        key: API_KEY,
+        type: 'video',
+        part: 'snippet',
+        q: this.term,
+      }
+      if(nextPage) params.pageToken = nextPage
+      try {
+        const { data } = await axios.get(API_URL, { params })
+        if(data.nextPageToken) { this.nextPage = data.nextPageToken }
+        if (nextPage) {
+          this.videos = [...this.videos, ...data.items]
+        } else {
           this.videos = data.items
-        } catch (error) {
-          this.searchError = error.message || 'Something went wrong.'
         }
+      } catch (error) {
+        this.searchError = error.message || 'Something went wrong.'
       }
     },
     selectVideo(video) {
-      console.log(video);
       this.selectedVideo = video
     }
   },
