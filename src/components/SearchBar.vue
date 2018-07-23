@@ -1,15 +1,28 @@
 <template>
-  <v-layout justify-center>
-    <v-flex xs12 sm10 md8>
-      <v-text-field 
-        clearable
-        label='Enter Search' 
-        @input="onInput" 
-        append-icon='search'
-        :error-messages='errorMessage'
-      />
-    </v-flex>
-  </v-layout>
+  <v-toolbar
+      color="red"
+      dense
+    >
+      <v-toolbar-title class="mr-5 align-center">
+        <div class="logo-wrap">
+          <img class="logo" src='../assets/ytLogo.png' /> 
+          <span class="title">VueTube</span>
+        </div>
+      </v-toolbar-title>
+      <v-spacer></v-spacer>
+      <v-layout row align-center style="max-width: 650px">
+        <v-text-field 
+          clearable
+          label='Enter Search' 
+          @input="onInput" 
+          append-icon='search'
+          color="white"
+          hide-details
+          single-line
+          :error-messages='errorMessage'
+        />
+      </v-layout>
+    </v-toolbar>
 </template>
 
 <script>
@@ -26,6 +39,13 @@ export default {
 }
 </script>
 
-<style>
-  
+<style scoped>
+  .logo {
+    height: 25px;
+    margin-right: 5px;
+  }
+  .logo-wrap {
+    display: flex;
+    align-items: center;
+  }
 </style>

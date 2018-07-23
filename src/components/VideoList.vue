@@ -1,5 +1,5 @@
 <template>
-  <v-list>
+  <v-list :two-line="breakpoint">
     <VideoListItem 
       v-for="(video, i) in videos"
       :key="video.etag" 
@@ -17,6 +17,13 @@ export default {
   name: 'VideoList',
   components: {
     VideoListItem,
+  },
+  computed: {
+    breakpoint() {
+      const { mdAndUp, xs } = this.$vuetify.breakpoint
+      if (mdAndUp || xs) return true
+      else return false
+    }
   },
   props: {
     videos: Array,
